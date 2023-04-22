@@ -36,5 +36,9 @@ cp /root/roboshop-shell/mongo.repo /etc/yum.repos.d/mongo.repo
 echo -e "\e[36m>>>>>>>>>> Installing MongoDB Client <<<<<<<<<<\e[0m"
 yum install mongodb-org-shell -y
 
+echo -e "\e[36m>>>>>>>>>> Restarting MongoDB Client <<<<<<<<<<\e[0m"
+systemctl restart catalogue
+
 echo -e "\e[36m>>>>>>>>>> Loading Schema Final <<<<<<<<<<\e[0m"
 mongo --host mongodb.devopsdude.cloud </app/schema/catalogue.js
+

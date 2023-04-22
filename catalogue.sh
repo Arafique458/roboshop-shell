@@ -35,5 +35,5 @@ cp mongo.repo /etc/yum.repos.d/mongo.repo
 echo "\e[36m>>>>>>>>>> Installing MongoDB Client <<<<<<<<<<\e[0m"
 yum install mongo-org-shell -y
 
-echo "\e[36m>>>>>>>>>> Loading Schema <<<<<<<<<<\e[0m"
+echo "\e[36m>>>>>>>>>> Loading Schema Final <<<<<<<<<<\e[0m"
 mongo --host mongodb.devopsdude.cloud </app/schema/catalogue.js

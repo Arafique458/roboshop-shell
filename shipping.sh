@@ -2,7 +2,7 @@ echo -e "\e[36m>>>>>>>>>> Installing Maven <<<<<<<<<<\e[0m"
 yum install maven -y
 
 echo -e "\e[36m>>>>>>>>>> Setting up Systemd Service <<<<<<<<<<\e[0m"
-cp shipping.service /root/roboshop-shell/etc/systemd/system/shipping.service
+cp shipping.service /root/roboshop-shell/shipping.service /etc/systemd/system/shipping.service
 
 echo -e "\e[36m>>>>>>>>>> Adding user <<<<<<<<<<\e[0m"
 useradd roboshop

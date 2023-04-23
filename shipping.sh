@@ -24,7 +24,7 @@ echo -e "\e[36m>>>>>>>>>> Installing MYSQL <<<<<<<<<<\e[0m"
 yum install mysql -y
 
 echo -e "\e[36m>>>>>>>>>> Loading Schema <<<<<<<<<<\e[0m"
-mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRoboShop@1 < /app/schema/shipping.sql
+mysql -h mysql.devopsdude.cloud -uroot -pRoboShop@1 < /app/schema/shipping.sql
 
 echo -e "\e[36m>>>>>>>>>> Restarting Shipping <<<<<<<<<<\e[0m"
 systemctl daemon-reload

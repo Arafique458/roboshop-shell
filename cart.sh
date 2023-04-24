@@ -1,4 +1,5 @@
-script_path=$(dirname $0)
+script=$(realpath "0")
+script_path=$(dirname "$script")
 source ${script_path}/common.sh
 
 curl -sL https://rpm.nodesource.com/setup_lts.x | bash

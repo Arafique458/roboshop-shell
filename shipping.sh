@@ -1,9 +1,6 @@
 echo -e "\e[36m>>>>>>>>>> Installing Maven <<<<<<<<<<\e[0m"
 yum install maven -y
 
-echo -e "\e[36m>>>>>>>>>> Setting up Systemd Service <<<<<<<<<<\e[0m"
-cp /root/roboshop-shell/shipping.service /etc/systemd/system/shipping.service
-
 echo -e "\e[36m>>>>>>>>>> Adding user <<<<<<<<<<\e[0m"
 useradd roboshop
 
@@ -25,6 +22,9 @@ yum install mysql -y
 
 echo -e "\e[36m>>>>>>>>>> Loading Schema <<<<<<<<<<\e[0m"
 mysql -h mysql.devopsdude.cloud -uroot -pRoboShop@1 < /app/schema/shipping.sql
+
+echo -e "\e[36m>>>>>>>>>> Setting up Systemd Service <<<<<<<<<<\e[0m"
+cp /root/roboshop-shell/shipping.service /etc/systemd/system/shipping.service
 
 echo -e "\e[36m>>>>>>>>>> Restarting Shipping <<<<<<<<<<\e[0m"
 systemctl daemon-reload

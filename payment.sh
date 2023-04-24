@@ -9,7 +9,7 @@ echo -e "\e[36m>>>>>>>>>> Adding Application user <<<<<<<<<<\e[0m"
 useradd ${app_user}
 
 echo -e "\e[36m>>>>>>>>>> Creating Application Directory <<<<<<<<<<\e[0m"
-rmdir -rf /app
+rm -rf /app
 mkdir /app
 
 echo -e "\e[36m>>>>>>>>>> Downloading Payment Zip <<<<<<<<<<\e[0m"

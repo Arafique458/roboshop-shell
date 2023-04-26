@@ -57,7 +57,6 @@ func_systemd_setup(){
 
 #cart function
 func_nodejs(){
-
 # If we want the input to be considered on we will use double quote "" and change the print head value from $* to $1
   func_print_head "Configuring NodeJS Repos"
   curl -sL https://rpm.nodesource.com/setup_lts.x | bash
@@ -70,8 +69,9 @@ func_nodejs(){
   func_print_head "Installing NodeJS Dependencies"
   npm install
 
-  func_systemd_setup
   func_schema_setup
+  func_systemd_setup
+
 }
 
 func_java(){
@@ -92,6 +92,7 @@ func_java(){
     else
       echo echo -e "\e[31m>>> FAILURE <<<\e[0m"
     fi
+
   mv target/${component}-1.0.jar ${component}.jar
 
   func_schema_setup

@@ -1,6 +1,11 @@
 script=$(realpath "0")
 script_path=$(dirname "$script")
 source ${script_path}/common.sh
+mysql_root_password=$1
+
+if [ -z "$rabbitmq_appuser_password"]; then
+  echo RabbitMQ App user Password is Missing
+fi
 
 echo -e "\e[36m>>>>>>>>>> Disabling MYSQL 8 Version <<<<<<<<<<\e[0m"
 dnf module disable mysql -y
@@ -16,5 +21,5 @@ systemctl enable mysqld
 systemctl start mysqld
 
 echo -e "\e[36m>>>>>>>>>> Reseting MYSQL Password <<<<<<<<<<\e[0m"
-mysql_secure_installation --set-root-pass RoboShop@1
+mysql_secure_installation --set-root-pass $mysql_root_password
 mysql -uroot -pRoboShop@1

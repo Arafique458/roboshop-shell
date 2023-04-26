@@ -3,6 +3,10 @@ script_path=$(dirname "$script")
 source ${script_path}/common.sh
 rabbitmq_appuser_password=$1
 
+if [ -z "$rabbitmq_appuser_password"]; then
+  echo Input Roboshop Appuser Password Missing
+fi
+
 echo -e "\e[36m>>>>>>>>>> Setting Erlang repos <<<<<<<<<<\e[0m"
 curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.rpm.sh | bash
 

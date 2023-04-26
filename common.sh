@@ -6,6 +6,17 @@ print_head(){
 
 }
 
+schema_setup(){
+  echo -e "\e[36m>>>>>>>>>> copying mongoDB repo <<<<<<<<<<\e[0m"
+  cp $script_path/mongo.repo /etc/yum.repos.d/mongo.repo
+
+  echo -e "\e[36m>>>>>>>>>> Installing MongoDB Client <<<<<<<<<<\e[0m"
+  yum install mongodb-org-shell -y
+
+  echo -e "\e[36m>>>>>>>>>> Loading Schema Final <<<<<<<<<<\e[0m"
+  mongo --host mongodb.devopsdude.cloud </app/schema/${component}.js
+}
+
 #cart function
 func_nodejs(){
 
@@ -41,4 +52,6 @@ func_nodejs(){
   systemctl daemon-reload
   systemctl enable ${component}
   systemctl start ${component}
+
+  schema_setup
 }

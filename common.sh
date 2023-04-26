@@ -6,6 +6,15 @@ func_print_head(){
 
 }
 
+func_stat_check(){
+  if [ $? -eq 0 ]; then
+      echo -e "\e[32m>>> SUCCESS <<<\e[0m"
+    else
+      echo echo -e "\e[31m>>> FAILURE <<<\e[0m"
+    fi
+
+}
+
 func_schema_setup(){
 
 if [ "$schema_setup" == "mongo" ]; then
@@ -77,21 +86,15 @@ func_nodejs(){
 func_java(){
   func_print_head "Installing Maven"
   yum install maven -y
-  if [ $? -eq 0 ]; then
-    echo -e "\e[32m>>> SUCCESS <<<\e[0m"
-  else
-    echo echo -e "\e[31m>>> FAILURE <<<\e[0m"
-  fi
+
+  func_stat_check $? # ($#) Argument is being sent through here.
 
   func_app_prereq
 
   func_print_head "Downloading Maven Dependencies"
   mvn clean package
-   if [ $? -eq 0 ]; then
-      echo -e "\e[32m>>> SUCCESS <<<\e[0m"
-    else
-      echo echo -e "\e[31m>>> FAILURE <<<\e[0m"
-    fi
+
+  func_stat_check $?
 
   mv target/${component}-1.0.jar ${component}.jar
 

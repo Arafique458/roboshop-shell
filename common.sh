@@ -49,7 +49,7 @@ func_systemd_setup(){
   func_print_head "Copying Service"
     cp $script_path/${component}.service /etc/systemd/system/${component}.service
 
-     func_print_head "Starting cart Service"
+     func_print_head "Starting ${component} Service"
     systemctl daemon-reload
     systemctl enable ${component}
     systemctl start ${component}
@@ -77,11 +77,21 @@ func_nodejs(){
 func_java(){
   func_print_head "Installing Maven"
   yum install maven -y
+  if [ $? -eq 0 ]; then
+    echo -e "\e[32m>>> SUCCESS <<<\e[0m"
+  else
+    echo echo -e "\e[31m>>> FAILURE <<<\e[0m"
+  fi
 
   func_app_prereq
 
   func_print_head "Downloading Maven Dependencies"
   mvn clean package
+   if [ $? -eq 0 ]; then
+      echo -e "\e[32m>>> SUCCESS <<<\e[0m"
+    else
+      echo echo -e "\e[31m>>> FAILURE <<<\e[0m"
+    fi
   mv target/${component}-1.0.jar ${component}.jar
 
   func_schema_setup

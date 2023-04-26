@@ -8,7 +8,7 @@ func_print_head(){
 
 func_schema_setup(){
 
-if [ "$schema_setup" == "mongo"]; then
+if [ "$schema_setup" == "mongo" ]; then
   func_print_head "copying mongoDB repo"
   cp $script_path/mongo.repo /etc/yum.repos.d/mongo.repo
 
@@ -18,7 +18,7 @@ if [ "$schema_setup" == "mongo"]; then
   func_print_head "Loading Schema Final "
   mongo --host mongodb.devopsdude.cloud </app/schema/${component}.js
 fi
-if [ "$schema_setup" == "mysql"]; then
+if [ "$schema_setup" == "mysql" ]; then
 
   func_print_head "Installing MYSQL"
   yum install mysql -y

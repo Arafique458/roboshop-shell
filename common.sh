@@ -10,7 +10,7 @@ func_print_head(){
 }
 
 func_stat_check(){
-  if [ $? -eq 0 ]; then
+  if [ $1 -eq 0 ]; then
       echo -e "\e[32m>>> SUCCESS <<<\e[0m"
     else
       echo -e "\e[31m>>> FAILURE <<<\e[0m"
@@ -49,7 +49,7 @@ fi
 func_app_prereq(){
   func_print_head "Create Application User"
     id ${app_user} &>>$log_file #if user doesn't exit we add it using id
-    if [ $?-ne 0 ]; then
+    if [ $? -ne 0 ]; then
       useradd ${app_user} &>>$log_file
     fi
     func_stat_check $?

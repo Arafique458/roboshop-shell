@@ -43,7 +43,11 @@ fi
 
 func_app_prereq(){
   func_print_head "Create Application User"
-    useradd ${app_user} &>>$log_file
+    id ${app_user} &>>$log_file #if user doesn't exit we add it using id
+    if [ $?-ne 0 ]; then
+      useradd ${app_user} &>>$log_file
+    fi
+    func_stat_check $?
 
     func_print_head "Creating Application Directory"
     rm -rf /app

@@ -84,14 +84,17 @@ func_nodejs(){
 # If we want the input to be considered on we will use double quote "" and change the print head value from $* to $1
   func_print_head "Configuring NodeJS Repos"
   curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>$log_file
+  func_stat_check $?
 
   func_print_head "Installing NodeJS"
   yum install nodejs -y &>>$log_file
+  func_stat_check $?
 
   func_app_prereq
 
   func_print_head "Installing NodeJS Dependencies"
   npm install &>>$log_file
+  func_stat_check $?
 
   func_schema_setup
   func_systemd_setup

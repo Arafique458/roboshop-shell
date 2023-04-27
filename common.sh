@@ -73,6 +73,7 @@ func_app_prereq(){
 func_systemd_setup(){
     func_print_head "Copying Service"
     cp $script_path/${component}.service /etc/systemd/system/${component}.service &>>$log_file
+    func_stat_check $?
 
     func_print_head "Starting ${component} Service"
     systemctl daemon-reload &>>$log_file

@@ -63,6 +63,7 @@ func_app_prereq(){
     func_print_head "Downloading Application Content"
     curl -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip &>>$log_file
     cd /app
+    func_stat_check $?
 
     func_print_head "Unzipping Application Content"
     unzip /tmp/${component}.zip &>>$log_file
@@ -77,6 +78,7 @@ func_systemd_setup(){
     systemctl daemon-reload &>>$log_file
     systemctl enable ${component} &>>$log_file
     systemctl start ${component} &>>$log_file
+    func_stat_check $?
 }
 
 #cart function

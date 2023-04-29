@@ -3,23 +3,28 @@ script_path=$(dirname "$script")
 source ${script_path}/common.sh
 mysql_root_password=$1
 
-if [ -z "$rabbitmq_appuser_password"]; then
-  echo RabbitMQ App user Password is Missing
+if [ -z "$mysql_root_password" ]; then
+  echo Input MySQL root Password is Missing
+  exit
 fi
 
-echo -e "\e[36m>>>>>>>>>> Disabling MYSQL 8 Version <<<<<<<<<<\e[0m"
-dnf module disable mysql -y
+func_print_head "Disabling MYSQL 8 Version"
+dnf module disable mysql -y &>>$log_file
+func_stat_check $?
 
-echo -e "\e[36m>>>>>>>>>> Copying MySQL Repo File <<<<<<<<<<\e[0m"
-cp $script_path/mysql.repo /etc/yum.repos.d/mysql.repo
+func_print_head "Copying MySQL Repo File"
+cp $script_path/mysql.repo /etc/yum.repos.d/mysql.repo &>>$log_file
+func_stat_check $?
 
-echo -e "\e[36m>>>>>>>>>> Install MySQL <<<<<<<<<<\e[0m"
-yum install mysql-community-server -y
+func_print_head "Install MySQL"
+yum install mysql-community-server -y &>>$log_file
+func_stat_check $?
 
-echo -e "\e[36m>>>>>>>>>> Starting MYSQL <<<<<<<<<<\e[0m"
-systemctl enable mysqld
-systemctl start mysqld
+func_print_head "Starting MYSQL"
+systemctl enable mysqld &>>$log_file
+systemctl start mysqld &>>$log_file
+func_stat_check $?
 
-echo -e "\e[36m>>>>>>>>>> Reseting MYSQL Password <<<<<<<<<<\e[0m"
-mysql_secure_installation --set-root-pass $mysql_root_password
-mysql -uroot -pRoboShop@1
+func_print_head "Resetting MYSQL Password"
+mysql_secure_installation --set-root-pass $mysql_root_password &>>$log_file
+func_stat_check $?

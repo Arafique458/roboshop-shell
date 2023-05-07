@@ -5,6 +5,7 @@ rabbitmq_appuser_password=$1
 
 if [ -z "$rabbitmq_appuser_password" ]; then
   echo RabbitMQ App user Password is Missing
+  exit 1
 fi
 
 component=payment

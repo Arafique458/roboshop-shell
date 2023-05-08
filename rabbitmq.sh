@@ -8,11 +8,10 @@ if [ -z "$rabbitmq_appuser_password" ]; then
   exit 1
 fi
 
-func_print_head "Installing MongoDB"
-yum install mongodb-org -y &>>$log_file
-func_stat_check $?
-
-func_print_head "Setting Erlang repos"  
+#func_print_head "Installing MongoDB"
+#yum install mongodb-org -y &>>$log_file
+#func_stat_check $?
+func_print_head "Setting Erlang repos"
 curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.rpm.sh | bash &>>$log_file
 func_stat_check $?
 

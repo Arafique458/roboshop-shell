@@ -1,73 +1,71 @@
+app_user=roboshop
 script=$(realpath "0")
 script_path=$(dirname "$script")
 log_file=/tmp/roboshop.log
 app_user=roboshop
 
 # function for echo statements
-func_print_head(){
-  echo -e "\e[35m>>>>>>>>>> $* <<<<<<<<<<\e[0m"
-
+func_print_head() {
+  echo -e "\e[35m>>>>>>>>> $1 <<<<<<<<\e[0m"
+  echo -e "\e[35m>>>>>>>>> $1 <<<<<<<<\e[0m" &>>$log_file
 }
 
-func_stat_check(){
+func_stat_check() {
   if [ $1 -eq 0 ]; then
-      echo -e "\e[32m>>> SUCCESS <<<\e[0m"
-    else
-      echo -e "\e[31m>>> FAILURE <<<\e[0m"
-      echo "Refer the log files /tmp/roboshop.log for more information"
-      exit 1
-    fi
-
+    echo -e "\e[32mSUCCESS\e[0m"
+  else
+    echo -e "\e[31mFAILURE\e[0m"
+    echo "Refer the log file /tmp/roboshop.log for more information"
+    exit 1
+  fi
 }
 
-func_schema_setup(){
+func_schema_setup() {
+  if [ "$schema_setup" == "mongo" ]; then
+    func_print_head "Copy MongoDB repo"
+    cp ${script_path}/mongo.repo /etc/yum.repos.d/mongo.repo &>>$log_file
+    func_stat_check $?
 
-if [ "$schema_setup" == "mongo" ]; then
-  func_print_head "copying mongoDB repo"
-  cp $script_path/mongo.repo /etc/yum.repos.d/mongo.repo &>>$log_file
-  func_stat_check $?
+    func_print_head "Install MongoDB Client"
+    yum install mongodb-org-shell -y &>>$log_file
+    func_stat_check $?
 
-  func_print_head "Installing MongoDB Client"
-  yum install mongodb-org-shell -y &>>$log_file
-  func_stat_check $?
+    func_print_head "Load Schema"
+    mongo --host mongodb-dev.rdevopsb72.online </app/schema/${component}.js &>>$log_file
+    func_stat_check $?
+  fi
+  if [ "${schema_setup}" == "mysql" ]; then
+    func_print_head "Install MySQL Client"
+    yum install mysql -y &>>$log_file
+    func_stat_check $?
 
-  func_print_head "Loading Schema Final "
-  mongo --host mongodb.devopsdude.cloud </app/schema/${component}.js &>>$log_file
-  func_stat_check $?
-fi
-if [ "$schema_setup" == "mysql" ]; then
-  func_print_head "Installing MYSQL"
-  yum install mysql -y &>>$log_file
-  func_stat_check $?
-
-  func_print_head "Loading Schema "
-  mysql -h mysql.devopsdude.cloud -uroot -p${mysql_root_password} < /app/schema/shipping.sql &>>$log_file
-  func_stat_check $?
-fi
+    func_print_head "Load Schema"
+    mysql -h mysql-dev.rdevopsb72.online -uroot -p${mysql_root_password} < /app/schema/shipping.sql &>>$log_file
+    func_stat_check $?
+  fi
 }
 
-
-func_app_prereq(){
+func_app_prereq() {
   func_print_head "Create Application User"
-    id ${app_user} &>>$log_file #if user doesn't exit we add it using id
-    if [ $? -ne 0 ]; then
-      useradd ${app_user} &>>$log_file
-    fi
-    func_stat_check $?
+  id ${app_user} &>>/tmp/roboshop.log
+  if [ $? -ne 0 ]; then
+    useradd ${app_user} &>>/tmp/roboshop.log
+  fi
+  func_stat_check $?
 
-    func_print_head "Creating Application Directory"
-    rm -rf /app
-    mkdir /app &>>$log_file
-    func_stat_check $?
+  func_print_head "Create Application Directory"
+  rm -rf /app &>>$log_file
+  mkdir /app &>>$log_file
+  func_stat_check $?
 
-    func_print_head "Downloading Application Content"
-    curl -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip &>>$log_file
-    cd /app
-    func_stat_check $?
+  func_print_head "Download Application Content"
+  curl -L -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip &>>$log_file
+  func_stat_check $?
 
-    func_print_head "Unzipping Application Content"
-    unzip /tmp/${component}.zip &>>$log_file
-    func_stat_check $?
+  func_print_head "Extract Application Content"
+  cd /app
+  unzip /tmp/${component}.zip &>>$log_file
+  func_stat_check $?
 }
 
 func_systemd_setup(){

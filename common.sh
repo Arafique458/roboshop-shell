@@ -1,10 +1,10 @@
 app_user=roboshop
-script=$(realpath "0")
+script=$(realpath "$0")
 script_path=$(dirname "$script")
 log_file=/tmp/roboshop.log
-app_user=roboshop
+# rm -f $log_file
 
-# function for echo statements
+
 func_print_head() {
   echo -e "\e[35m>>>>>>>>> $1 <<<<<<<<\e[0m"
   echo -e "\e[35m>>>>>>>>> $1 <<<<<<<<\e[0m" &>>$log_file
@@ -68,70 +68,66 @@ func_app_prereq() {
   func_stat_check $?
 }
 
-func_systemd_setup(){
-    func_print_head "Copying Service"
-    cp $script_path/${component}.service /etc/systemd/system/${component}.service &>>$log_file
-    func_stat_check $?
+func_systemd_setup() {
+  func_print_head "Setup SystemD Service"
+  cp ${script_path}/${component}.service /etc/systemd/system/${component}.service &>>$log_file
+  func_stat_check $?
 
-    func_print_head "Starting ${component} Service"
-    systemctl daemon-reload &>>$log_file
-    systemctl enable ${component} &>>$log_file
-    systemctl start ${component} &>>$log_file
-    func_stat_check $?
+  func_print_head "Start ${component} Service"
+  systemctl daemon-reload &>>$log_file
+  systemctl enable ${component} &>>$log_file
+  systemctl restart ${component} &>>$log_file
+  func_stat_check $?
 }
 
-#cart function
-func_nodejs(){
-# If we want the input to be considered on we will use double quote "" and change the print head value from $* to $1
-  func_print_head "Configuring NodeJS Repos"
+func_nodejs() {
+  func_print_head "Configuring NodeJS repos"
   curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>$log_file
   func_stat_check $?
 
-  func_print_head "Installing NodeJS"
+  func_print_head "Install NodeJS"
   yum install nodejs -y &>>$log_file
   func_stat_check $?
 
   func_app_prereq
 
-  func_print_head "Installing NodeJS Dependencies"
+  func_print_head "Install NodeJS Dependencies"
   npm install &>>$log_file
   func_stat_check $?
 
   func_schema_setup
   func_systemd_setup
-
 }
 
-func_java(){
-  func_print_head "Installing Maven"
+func_java() {
+  func_print_head "Install Maven"
   yum install maven -y &>>$log_file
-
-  func_stat_check $? # ($#) Argument is being sent through here.
+  func_stat_check $?
 
   func_app_prereq
 
-  func_print_head "Downloading Maven Dependencies"
+  func_print_head "Download Maven Dependencies"
   mvn clean package &>>$log_file
   func_stat_check $?
-
   mv target/${component}-1.0.jar ${component}.jar &>>$log_file
 
   func_schema_setup
   func_systemd_setup
-  }
+}
 
-func_python(){
-  func_print_head "Installing Python"
+
+func_python() {
+  func_print_head "Install Python"
   yum install python36 gcc python3-devel -y &>>$log_file
   func_stat_check $?
 
   func_app_prereq
 
-  func_print_head "Installing Python Dependencies"
+  func_print_head "Install Python Dependencies"
   pip3.6 install -r requirements.txt &>>$log_file
   func_stat_check $?
 
-  func_print_head "Updating Passwords in System Service file"
+  func_print_head "Update Passwords in System Service file"
   sed -i -e "s|rabbitmq_appuser_password|${rabbitmq_appuser_password}|" ${script_path}/payment.service &>>$log_file
   func_stat_check $?
 

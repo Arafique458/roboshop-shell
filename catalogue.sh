@@ -16,5 +16,5 @@ echo -e "\e[36m>>>>>>>>>> Restarting MongoDB Client <<<<<<<<<<\e[0m"
 systemctl restart catalogue
 
 echo -e "\e[36m>>>>>>>>>> Loading Schema Final <<<<<<<<<<\e[0m"
-mongo --host mongodb.devopsdude.cloud </app/schema/catalogue.js
+mongo --host mongodb-dev.devopsdude.cloud </app/schema/catalogue.js
 

@@ -13,7 +13,7 @@ dnf module disable mysql -y &>>$log_file
 func_stat_check $?
 
 func_print_head "Copying MySQL Repo File"
-cp $script_path/mysql.repo /etc/yum.repos.d/mysql.repo &>>$log_file
+cp ${script_path}/mysql.repo /etc/yum.repos.d/mysql.repo &>>$log_file
 func_stat_check $?
 
 func_print_head "Install MySQL"

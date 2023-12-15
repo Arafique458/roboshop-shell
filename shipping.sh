@@ -12,4 +12,4 @@ component="shipping"
 # shellcheck disable=SC2034
 schema_setup=mysql
 
-func_java()
+func_java
